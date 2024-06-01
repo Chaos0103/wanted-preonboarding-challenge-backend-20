@@ -18,6 +18,9 @@ public class MemberApiController {
 
     private final MemberService memberService;
 
+    /**
+     * 회원 신규 등록 API
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<MemberCreateResponse> createMember(@Valid @RequestBody MemberCreateRequest request) {
@@ -26,6 +29,9 @@ public class MemberApiController {
         return ApiResponse.created(response);
     }
 
+    /**
+     * 회원 계정 로그인 API
+     */
     @PostMapping("/login")
     public ApiResponse<MemberTokenResponse> login(@Valid @RequestBody MemberLoginRequest request) {
         MemberTokenResponse response = memberService.login(request.getEmail(), request.getPwd());

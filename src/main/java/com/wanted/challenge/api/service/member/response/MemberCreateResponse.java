@@ -1,5 +1,6 @@
 package com.wanted.challenge.api.service.member.response;
 
+import com.wanted.challenge.domain.member.Member;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,5 +18,13 @@ public class MemberCreateResponse {
         this.email = email;
         this.name = name;
         this.createdDateTime = createdDateTime;
+    }
+
+    public static MemberCreateResponse of(Member member) {
+        return MemberCreateResponse.builder()
+            .email(member.getEmail())
+            .name(member.getName())
+            .createdDateTime(member.getCreatedDateTime())
+            .build();
     }
 }
