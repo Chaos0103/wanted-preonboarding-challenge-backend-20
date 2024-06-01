@@ -53,15 +53,10 @@ public class OrderApiControllerDocsTest extends RestDocsSupport {
             .productPrice(1_200_000)
             .productStatus("예약중")
             .build();
-        ProductResponse response3 = ProductResponse.builder()
-            .productId(3L)
-            .productName("MacBook Air 15 M2 256GB 실버")
-            .productPrice(1_200_000)
-            .productStatus("완료")
-            .build();
-        List<ProductResponse> content = List.of(response1, response2, response3);
+
+        List<ProductResponse> content = List.of(response1, response2);
         PageRequest page = PageRequest.of(0, 10);
-        PageResponse<ProductResponse> response = PageResponse.of(new PageImpl<>(content, page, 3));
+        PageResponse<ProductResponse> response = PageResponse.of(new PageImpl<>(content, page, 2));
 
         given(orderQueryService.searchOrders(anyString()))
             .willReturn(response);
