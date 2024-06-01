@@ -9,6 +9,12 @@ endif::[]
 :toclevels: 2
 :sectlinks:
 
+[[Member-API]]
+== 회원 API
+
+include::api/member/create-member.adoc[]
+include::api/member/login-member.adoc[]
+
 [[Product-API]]
 == 제품 API
 

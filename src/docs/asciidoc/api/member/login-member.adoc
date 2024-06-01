@@ -1,0 +1,12 @@
+[[login-member]]
+=== 회원 로그인 API
+
+==== HTTP Request
+
+include::{snippets}/login-member/http-request.adoc[]
+include::{snippets}/login-member/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/login-member/http-response.adoc[]
+include::{snippets}/login-member/response-fields.adoc[]
