@@ -1,0 +1,12 @@
+[[search-product]]
+=== 제품 상세 조회 API
+
+==== HTTP Request
+
+include::{snippets}/search-product/http-request.adoc[]
+include::{snippets}/search-product/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/search-product/http-response.adoc[]
+include::{snippets}/search-product/response-fields.adoc[]

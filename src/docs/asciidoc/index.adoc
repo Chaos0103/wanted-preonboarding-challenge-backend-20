@@ -1,0 +1,19 @@
+ifndef::snippets[]
+:snippets: ../../build/generated-snippets
+endif::[]
+= Challenge REST API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[Product-API]]
+== 제품 API
+
+include::api/product/create-product.adoc[]
+include::api/product/search-products.adoc[]
+include::api/product/search-product.adoc[]
+include::api/product/start-transaction-product.adoc[]
+include::api/product/sale-approval-product.adoc[]

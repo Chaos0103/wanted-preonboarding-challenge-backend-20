@@ -1,0 +1,12 @@
+[[start-transaction-product]]
+=== 제품 거래 시작 API
+
+==== HTTP Request
+
+include::{snippets}/start-transaction-product/http-request.adoc[]
+include::{snippets}/start-transaction-product/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/start-transaction-product/http-response.adoc[]
+include::{snippets}/start-transaction-product/response-fields.adoc[]

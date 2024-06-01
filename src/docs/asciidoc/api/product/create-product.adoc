@@ -1,0 +1,13 @@
+[[create-product]]
+=== 제품 신규 등록 API
+
+==== HTTP Request
+
+include::{snippets}/create-product/http-request.adoc[]
+include::{snippets}/create-product/request-headers.adoc[]
+include::{snippets}/create-product/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-product/http-response.adoc[]
+include::{snippets}/create-product/response-fields.adoc[]
