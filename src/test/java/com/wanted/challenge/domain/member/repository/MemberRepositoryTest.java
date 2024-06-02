@@ -23,7 +23,8 @@ class MemberRepositoryTest extends IntegrationTestSupport {
     @ParameterizedTest
     void existsByEmail(String email, boolean expected) {
         //given
-        Member member = createMember();
+        String memberKey = UUID.randomUUID().toString();
+        Member member = createMember(memberKey);
 
         //when
         boolean isExistEmail = memberRepository.existsByEmail(email);
@@ -36,7 +37,8 @@ class MemberRepositoryTest extends IntegrationTestSupport {
     @Test
     void findByEmail() {
         //given
-        Member member = createMember();
+        String memberKey = UUID.randomUUID().toString();
+        Member member = createMember(memberKey);
 
         //when
         Optional<Member> findMember = memberRepository.findByEmail("wanted@gmail.com");
@@ -45,10 +47,24 @@ class MemberRepositoryTest extends IntegrationTestSupport {
         assertThat(findMember).isPresent();
     }
 
-    private Member createMember() {
+    @DisplayName("회원 고유키로 회원을 조회한다.")
+    @Test
+    void findByMemberKey() {
+        //given
+        String memberKey = UUID.randomUUID().toString();
+        Member member = createMember(memberKey);
+
+        //when
+        Optional<Member> findMember = memberRepository.findByMemberKey(memberKey);
+
+        //then
+        assertThat(findMember).isPresent();
+    }
+
+    private Member createMember(String memberKey) {
         Member member = Member.builder()
             .isDeleted(false)
-            .memberKey(UUID.randomUUID().toString())
+            .memberKey(memberKey)
             .email("wanted@gmail.com")
             .pwd("wanted1234!")
             .name("원티드")

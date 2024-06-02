@@ -7,6 +7,7 @@ import com.wanted.challenge.api.controller.product.request.ProductSearchParam;
 import com.wanted.challenge.api.service.product.ProductQueryService;
 import com.wanted.challenge.api.service.product.ProductService;
 import com.wanted.challenge.api.service.product.response.ProductCreateResponse;
+import com.wanted.challenge.common.security.SecurityUtils;
 import com.wanted.challenge.docs.RestDocsSupport;
 import com.wanted.challenge.domain.product.repository.response.ProductResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -19,6 +20,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
@@ -59,6 +61,9 @@ public class ProductApiControllerDocsTest extends RestDocsSupport {
             .productPrice(1_200_000)
             .createdDateTime(LocalDateTime.of(2024, 1, 1, 13, 0))
             .build();
+
+        given(SecurityUtils.getCurrentMemberKey())
+            .willReturn(UUID.randomUUID().toString());
 
         given(productService.createProduct(anyString(), any()))
             .willReturn(response);

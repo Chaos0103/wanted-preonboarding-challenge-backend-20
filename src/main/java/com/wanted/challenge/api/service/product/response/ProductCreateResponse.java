@@ -1,5 +1,6 @@
 package com.wanted.challenge.api.service.product.response;
 
+import com.wanted.challenge.domain.product.Product;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,5 +20,14 @@ public class ProductCreateResponse {
         this.productName = productName;
         this.productPrice = productPrice;
         this.createdDateTime = createdDateTime;
+    }
+
+    public static ProductCreateResponse of(Product product) {
+        return ProductCreateResponse.builder()
+            .productId(product.getId())
+            .productName(product.getProductName())
+            .productPrice(product.getPrice())
+            .createdDateTime(product.getCreatedDateTime())
+            .build();
     }
 }
