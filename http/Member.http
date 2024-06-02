@@ -1,0 +1,18 @@
+### Create Member
+POST http://localhost:8080/api/v1/members
+Content-Type: application/json
+
+{
+  "email": "wanted@gmail.com",
+  "pwd": "wanted1234!",
+  "name": "원티드"
+}
+
+### Member Login
+POST http://localhost:8080/api/v1/members/login
+Content-Type: application/json
+
+{
+  "email": "wanted@gmail.com",
+  "pwd": "wanted1234!"
+}

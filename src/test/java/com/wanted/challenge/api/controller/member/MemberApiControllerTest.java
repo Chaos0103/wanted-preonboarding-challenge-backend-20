@@ -2,6 +2,7 @@ package com.wanted.challenge.api.controller.member;
 
 import com.wanted.challenge.ControllerTestSupport;
 import com.wanted.challenge.api.controller.member.request.MemberCreateRequest;
+import com.wanted.challenge.api.controller.member.request.MemberLoginRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -111,5 +112,73 @@ class MemberApiControllerTest extends ControllerTestSupport {
             )
             .andDo(print())
             .andExpect(status().isCreated());
+    }
+
+    @DisplayName("로그인시 이메일은 필수값이다.")
+    @Test
+    void loginWithoutEmail() throws Exception {
+        //given
+        MemberLoginRequest request = MemberLoginRequest.builder()
+            .email(" ")
+            .pwd("wanted1234!")
+            .build();
+
+        //when //then
+        mockMvc.perform(
+                post(BASE_URL + "/login")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value(NOT_BLANK_MEMBER_EMAIL))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("로그인시 비밀번호는 필수값이다.")
+    @Test
+    void loginWithoutPwd() throws Exception {
+        //given
+        MemberLoginRequest request = MemberLoginRequest.builder()
+            .email("wanted@gmail.com")
+            .pwd(" ")
+            .build();
+
+        //when //then
+        mockMvc.perform(
+                post(BASE_URL + "/login")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("400"))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+            .andExpect(jsonPath("$.message").value(NOT_BLANK_MEMBER_PWD))
+            .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("회원이 로그인을 한다.")
+    @Test
+    void login() throws Exception {
+        //given
+        MemberLoginRequest request = MemberLoginRequest.builder()
+            .email("wanted@gmail.com")
+            .pwd("wanted1234!")
+            .build();
+
+        //when //then
+        mockMvc.perform(
+                post(BASE_URL + "/login")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andDo(print())
+            .andExpect(status().isOk());
     }
 }

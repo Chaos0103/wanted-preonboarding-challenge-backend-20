@@ -3,6 +3,7 @@ package com.wanted.challenge.api.service.member;
 import com.wanted.challenge.IntegrationTestSupport;
 import com.wanted.challenge.api.service.member.request.MemberCreateServiceRequest;
 import com.wanted.challenge.api.service.member.response.MemberCreateResponse;
+import com.wanted.challenge.api.service.member.response.MemberTokenResponse;
 import com.wanted.challenge.common.exception.DuplicateException;
 import com.wanted.challenge.domain.member.Member;
 import com.wanted.challenge.domain.member.repository.MemberRepository;

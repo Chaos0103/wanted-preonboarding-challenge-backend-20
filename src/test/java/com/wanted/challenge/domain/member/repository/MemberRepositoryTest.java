@@ -2,15 +2,16 @@ package com.wanted.challenge.domain.member.repository;
 
 import com.wanted.challenge.IntegrationTestSupport;
 import com.wanted.challenge.domain.member.Member;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MemberRepositoryTest extends IntegrationTestSupport {
 
@@ -29,6 +30,19 @@ class MemberRepositoryTest extends IntegrationTestSupport {
 
         //then
         assertThat(isExistEmail).isEqualTo(expected);
+    }
+
+    @DisplayName("이메일로 회원을 조회한다.")
+    @Test
+    void findByEmail() {
+        //given
+        Member member = createMember();
+
+        //when
+        Optional<Member> findMember = memberRepository.findByEmail("wanted@gmail.com");
+
+        //then
+        assertThat(findMember).isPresent();
     }
 
     private Member createMember() {

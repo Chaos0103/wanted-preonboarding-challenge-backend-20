@@ -34,7 +34,7 @@ public class MemberApiController {
      */
     @PostMapping("/login")
     public ApiResponse<MemberTokenResponse> login(@Valid @RequestBody MemberLoginRequest request) {
-        MemberTokenResponse response = memberService.login(request.getEmail(), request.getPwd());
+        MemberTokenResponse response = memberService.login(request.getEmail().strip(), request.getPwd().strip());
 
         return ApiResponse.ok(response);
     }

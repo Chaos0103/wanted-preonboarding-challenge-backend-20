@@ -22,3 +22,6 @@ logging:
   level:
     com.wanted.challenge: debug
     org.hibernate.SQL: debug
+
+jwt:
+  secret: testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttest
