@@ -85,4 +85,17 @@ class ProductApiControllerTest extends ControllerTestSupport {
             .andDo(print())
             .andExpect(status().isCreated());
     }
+
+    @DisplayName("제품 거래를 시작한다.")
+    @Test
+    void startTransaction() throws Exception {
+        //given //when //then
+        mockMvc.perform(
+                post(BASE_URL + "/{productId}/start-transaction", 1)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+            )
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
 }

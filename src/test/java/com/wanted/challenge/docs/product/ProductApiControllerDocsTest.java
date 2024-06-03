@@ -246,6 +246,9 @@ public class ProductApiControllerDocsTest extends RestDocsSupport {
             .productStatus("예약중")
             .build();
 
+        given(SecurityUtils.getCurrentMemberKey())
+            .willReturn(UUID.randomUUID().toString());
+
         given(productService.startTransaction(anyString(), anyLong()))
             .willReturn(response);
 

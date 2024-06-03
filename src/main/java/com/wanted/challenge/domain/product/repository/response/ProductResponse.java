@@ -1,5 +1,6 @@
 package com.wanted.challenge.domain.product.repository.response;
 
+import com.wanted.challenge.domain.product.Product;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,5 +18,14 @@ public class ProductResponse {
         this.productName = productName;
         this.productPrice = productPrice;
         this.productStatus = productStatus;
+    }
+
+    public static ProductResponse of(Product product) {
+        return ProductResponse.builder()
+            .productId(product.getId())
+            .productName(product.getProductName())
+            .productPrice(product.getPrice())
+            .productStatus(product.getStatus().getText())
+            .build();
     }
 }

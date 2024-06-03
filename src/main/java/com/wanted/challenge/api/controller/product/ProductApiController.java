@@ -27,10 +27,10 @@ public class ProductApiController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<ProductCreateResponse> createProduct(@Valid @RequestBody ProductCreateRequest request) {
-        String memberKey = SecurityUtils.getCurrentMemberKey();
+    public ApiResponse<ProductCreateResponse> createProduct(@Valid @RequestBody final ProductCreateRequest request) {
+        final String memberKey = SecurityUtils.getCurrentMemberKey();
 
-        ProductCreateResponse response = productService.createProduct(memberKey, request.toServiceRequest());
+        final ProductCreateResponse response = productService.createProduct(memberKey, request.toServiceRequest());
 
         return ApiResponse.created(response);
     }
@@ -59,8 +59,10 @@ public class ProductApiController {
      * 제품 거래 시작 API
      */
     @PostMapping("/{productId}/start-transaction")
-    public ApiResponse<ProductResponse> startTransaction(@PathVariable Long productId) {
-        ProductResponse response = productService.startTransaction("memberKey", productId);
+    public ApiResponse<ProductResponse> startTransaction(@PathVariable final Long productId) {
+        final String memberKey = SecurityUtils.getCurrentMemberKey();
+
+        final ProductResponse response = productService.startTransaction(memberKey, productId);
 
         return ApiResponse.ok(response);
     }

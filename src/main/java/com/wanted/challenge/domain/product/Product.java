@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.wanted.challenge.common.message.ExceptionMessage.NON_PURCHASE_PRODUCT;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -49,5 +51,17 @@ public class Product extends TimeBaseEntity {
             .status(ProductStatus.SELLING)
             .member(member)
             .build();
+    }
+
+    public void startTransaction() {
+        if (status != ProductStatus.SELLING) {
+            throw new IllegalArgumentException(NON_PURCHASE_PRODUCT);
+        }
+
+        status = ProductStatus.RESERVATION;
+    }
+
+    public boolean isSelling() {
+        return status == ProductStatus.SELLING;
     }
 }
