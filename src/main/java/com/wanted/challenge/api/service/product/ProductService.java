@@ -17,8 +17,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.NoSuchElementException;
 
-import static com.wanted.challenge.common.message.ExceptionMessage.NO_SUCH_MEMBER;
-import static com.wanted.challenge.common.message.ExceptionMessage.NO_SUCH_PRODUCT;
+import static com.wanted.challenge.common.message.ExceptionMessage.*;
 
 @RequiredArgsConstructor
 @Service
@@ -51,8 +50,24 @@ public class ProductService {
         return ProductResponse.of(product);
     }
 
-    public ProductResponse saleApproval(final String memberKey, final long productId) {
-        return null;
+    public ProductResponse saleApproval(final String ownerMemberKey, final long productId, final long orderId) {
+        //회원+상품 조회
+        Product product = productRepository.findWithMemberById(productId)
+            .orElseThrow(() -> new NoSuchElementException(NO_SUCH_PRODUCT));
+
+        //상품 판매자가 맞는지 검증
+        if (!product.isOwner(ownerMemberKey)) {
+            throw new IllegalArgumentException(NO_AUTH);
+        }
+
+        //주문 조회
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new NoSuchElementException(NO_SUCH_ORDER));
+
+        //주문 상태 변경 + 상품 상태 변경
+        order.saleApproval();
+
+        return ProductResponse.of(product);
     }
 
     private Member findMember(final String memberKey) {

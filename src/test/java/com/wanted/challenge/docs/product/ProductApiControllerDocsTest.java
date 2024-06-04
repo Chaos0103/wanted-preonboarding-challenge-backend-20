@@ -300,11 +300,14 @@ public class ProductApiControllerDocsTest extends RestDocsSupport {
             .productStatus("완료")
             .build();
 
-        given(productService.saleApproval(anyString(), anyLong()))
+        given(SecurityUtils.getCurrentMemberKey())
+            .willReturn(UUID.randomUUID().toString());
+
+        given(productService.saleApproval(anyString(), anyLong(), anyLong()))
             .willReturn(response);
 
         mockMvc.perform(
-                post(BASE_URL + "/{productId}/sale-approval", 1)
+                post(BASE_URL + "/{productId}/sale-approval/{orderId}", 1, 1)
                     .contentType(MediaType.APPLICATION_JSON)
                     .header(HttpHeaders.AUTHORIZATION, "access.token")
             )
@@ -318,7 +321,9 @@ public class ProductApiControllerDocsTest extends RestDocsSupport {
                 ),
                 pathParameters(
                     parameterWithName("productId")
-                        .description("제품 식별키")
+                        .description("제품 식별키"),
+                    parameterWithName("orderId")
+                        .description("주문 식별키")
                 ),
                 responseFields(
                     fieldWithPath("code").type(JsonFieldType.NUMBER)

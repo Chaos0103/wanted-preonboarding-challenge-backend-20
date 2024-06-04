@@ -15,36 +15,49 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "orders")
-@IdClass(OrderId.class)
 public class Order extends TimeBaseEntity {
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id")
+    private Long id;
 
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OrderStatus orderStatus;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime orderDateTime;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
     @Builder
-    private Order(boolean isDeleted, Member member, Product product, LocalDateTime orderDateTime) {
+    public Order(boolean isDeleted, OrderStatus orderStatus, LocalDateTime orderDateTime, Member member, Product product) {
         super(isDeleted);
+        this.orderStatus = orderStatus;
+        this.orderDateTime = orderDateTime;
         this.member = member;
         this.product = product;
-        this.orderDateTime = orderDateTime;
     }
 
     public static Order create(Member member, Product product) {
         return Order.builder()
             .isDeleted(false)
+            .orderStatus(OrderStatus.ORDER)
+            .orderDateTime(LocalDateTime.now())
             .member(member)
             .product(product)
-            .orderDateTime(LocalDateTime.now())
             .build();
+    }
+
+    public void saleApproval() {
+        orderStatus = OrderStatus.COMPLETE;
+        product.saleApproval();
     }
 }

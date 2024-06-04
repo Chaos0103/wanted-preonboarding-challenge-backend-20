@@ -70,9 +70,11 @@ public class ProductApiController {
     /**
      * 제품 판매 승인 API
      */
-    @PostMapping("/{productId}/sale-approval")
-    public ApiResponse<ProductResponse> saleApproval(@PathVariable Long productId) {
-        ProductResponse response = productService.saleApproval("memberKey", productId);
+    @PostMapping("/{productId}/sale-approval/{orderId}")
+    public ApiResponse<ProductResponse> saleApproval(@PathVariable Long productId, @PathVariable Long orderId) {
+        final String memberKey = SecurityUtils.getCurrentMemberKey();
+
+        final ProductResponse response = productService.saleApproval(memberKey, productId, orderId);
 
         return ApiResponse.ok(response);
     }

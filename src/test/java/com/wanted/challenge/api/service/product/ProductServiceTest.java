@@ -6,6 +6,7 @@ import com.wanted.challenge.api.service.product.response.ProductCreateResponse;
 import com.wanted.challenge.domain.member.Member;
 import com.wanted.challenge.domain.member.repository.MemberRepository;
 import com.wanted.challenge.domain.order.Order;
+import com.wanted.challenge.domain.order.OrderStatus;
 import com.wanted.challenge.domain.order.repository.OrderRepository;
 import com.wanted.challenge.domain.product.Product;
 import com.wanted.challenge.domain.product.ProductStatus;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -212,7 +214,121 @@ class ProductServiceTest extends IntegrationTestSupport {
             );
 
         List<Order> orders = orderRepository.findAll();
-        assertThat(orders).hasSize(1);
+        assertThat(orders).hasSize(1)
+            .extracting("orderStatus")
+            .containsExactlyInAnyOrder(
+                OrderStatus.ORDER
+            );
+    }
+
+    @DisplayName("입력 받은 제품 식별키가 일치하는 제품이 존재하지 않으면 예외가 발생한다.")
+    @Test
+    void saleApprovalWithoutProduct() {
+        //given
+        String ownerMemberKey = UUID.randomUUID().toString();
+        Member owner = createMember(ownerMemberKey, "owner@gmail.com");
+
+        //when
+        assertThatThrownBy(() -> productService.saleApproval(ownerMemberKey, 1L, 1L))
+            .isInstanceOf(NoSuchElementException.class)
+            .hasMessage(NO_SUCH_PRODUCT);
+
+        //then
+    }
+
+    @DisplayName("입력 받은 주문 식별키가 일치하는 주문이 존재하지 않으면 예외가 발생한다.")
+    @Test
+    void saleApprovalWithoutOrder() {
+        //given
+        String ownerMemberKey = UUID.randomUUID().toString();
+        Member owner = createMember(ownerMemberKey, "owner@gmail.com");
+        Product product = createProduct(owner, ProductStatus.RESERVATION);
+
+        String consumerMemberKey = UUID.randomUUID().toString();
+        Member consumer = createMember(consumerMemberKey, "consumer@gmail.com");
+
+        //when
+        assertThatThrownBy(() -> productService.saleApproval(ownerMemberKey, product.getId(), 1L))
+            .isInstanceOf(NoSuchElementException.class)
+            .hasMessage(NO_SUCH_ORDER);
+
+        //then
+    }
+
+    @DisplayName("판매승인을 할 때 판매자 본인의 제품이 아니라면 예외가 발생한다.")
+    @Test
+    void saleApprovalWithoutAuth() {
+        //given
+        String ownerMemberKey = UUID.randomUUID().toString();
+        Member owner = createMember(ownerMemberKey, "owner@gmail.com");
+        Product product = createProduct(owner, ProductStatus.RESERVATION);
+
+        String consumerMemberKey = UUID.randomUUID().toString();
+        Member consumer = createMember(consumerMemberKey, "consumer@gmail.com");
+
+        Order order = createOrder(consumer, product, OrderStatus.ORDER);
+
+        String anotherMemberKey = UUID.randomUUID().toString();
+        Member another = createMember(anotherMemberKey, "another@gmail.com");
+
+        //when
+        assertThatThrownBy(() -> productService.saleApproval(anotherMemberKey, product.getId(), order.getId()))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage(NO_AUTH);
+
+        //then
+        List<Product> products = productRepository.findAll();
+        assertThat(products).hasSize(1)
+            .extracting("id", "status")
+            .containsExactlyInAnyOrder(
+                tuple(product.getId(), ProductStatus.RESERVATION)
+            );
+
+        List<Order> orders = orderRepository.findAll();
+        assertThat(orders).hasSize(1)
+            .extracting("id", "orderStatus")
+            .containsExactlyInAnyOrder(
+                tuple(order.getId(), OrderStatus.ORDER)
+            );
+    }
+
+    @DisplayName("판매자는 거래 진행중인 구매자에 대해 판매승인을 하는 경우 거래가 완료된다.")
+    @Test
+    void saleApproval() {
+        //given
+        String ownerMemberKey = UUID.randomUUID().toString();
+        Member owner = createMember(ownerMemberKey, "owner@gmail.com");
+        Product product = createProduct(owner, ProductStatus.RESERVATION);
+
+        String consumerMemberKey = UUID.randomUUID().toString();
+        Member consumer = createMember(consumerMemberKey, "consumer@gmail.com");
+
+        Order order = createOrder(consumer, product, OrderStatus.ORDER);
+
+        //when
+        ProductResponse response = productService.saleApproval(ownerMemberKey, product.getId(), order.getId());
+
+        //then
+        assertThat(response)
+            .isNotNull()
+            .hasFieldOrPropertyWithValue("productId", product.getId())
+            .hasFieldOrPropertyWithValue("productName", "MacBook Air 15 M2 256GB 스페이스그레이")
+            .hasFieldOrPropertyWithValue("productPrice", 1_200_000)
+            .hasFieldOrPropertyWithValue("productStatus", ProductStatus.COMPLETION.getText());
+
+        List<Product> products = productRepository.findAll();
+        assertThat(products).hasSize(1)
+            .extracting("id", "status")
+            .containsExactlyInAnyOrder(
+                tuple(product.getId(), ProductStatus.COMPLETION)
+            );
+
+        List<Order> orders = orderRepository.findAll();
+        assertThat(orders).hasSize(1)
+            .extracting("id", "orderStatus")
+            .containsExactlyInAnyOrder(
+                tuple(order.getId(), OrderStatus.COMPLETE)
+            );
     }
 
     private Member createMember(String memberKey, String email) {
@@ -235,5 +351,15 @@ class ProductServiceTest extends IntegrationTestSupport {
             .member(member)
             .build();
         return productRepository.save(product);
+    }
+
+    private Order createOrder(Member member, Product product, OrderStatus orderStatus) {
+        Order order = Order.builder()
+            .member(member)
+            .product(product)
+            .orderStatus(orderStatus)
+            .orderDateTime(LocalDateTime.now())
+            .build();
+        return orderRepository.save(order);
     }
 }

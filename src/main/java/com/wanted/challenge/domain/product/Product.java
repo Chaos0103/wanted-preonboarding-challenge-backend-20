@@ -61,7 +61,11 @@ public class Product extends TimeBaseEntity {
         status = ProductStatus.RESERVATION;
     }
 
-    public boolean isSelling() {
-        return status == ProductStatus.SELLING;
+    public void saleApproval() {
+        status = ProductStatus.COMPLETION;
+    }
+
+    public boolean isOwner(String memberKey) {
+        return member.getMemberKey().equals(memberKey);
     }
 }
