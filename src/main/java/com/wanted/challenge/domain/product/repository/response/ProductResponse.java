@@ -1,6 +1,7 @@
 package com.wanted.challenge.domain.product.repository.response;
 
 import com.wanted.challenge.domain.product.Product;
+import com.wanted.challenge.domain.product.ProductStatus;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,11 +14,11 @@ public class ProductResponse {
     private final String productStatus;
 
     @Builder
-    private ProductResponse(Long productId, String productName, int productPrice, String productStatus) {
+    public ProductResponse(Long productId, String productName, int productPrice, ProductStatus productStatus) {
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
-        this.productStatus = productStatus;
+        this.productStatus = productStatus.getText();
     }
 
     public static ProductResponse of(Product product) {
@@ -25,7 +26,7 @@ public class ProductResponse {
             .productId(product.getId())
             .productName(product.getProductName())
             .productPrice(product.getPrice())
-            .productStatus(product.getStatus().getText())
+            .productStatus(product.getStatus())
             .build();
     }
 }

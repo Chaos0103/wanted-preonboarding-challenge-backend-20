@@ -7,8 +7,9 @@ import com.wanted.challenge.api.controller.product.request.ProductSearchParam;
 import com.wanted.challenge.api.service.product.ProductQueryService;
 import com.wanted.challenge.api.service.product.ProductService;
 import com.wanted.challenge.api.service.product.response.ProductCreateResponse;
-import com.wanted.challenge.common.security.SecurityUtils;
+import com.wanted.challenge.common.utils.SecurityUtils;
 import com.wanted.challenge.docs.RestDocsSupport;
+import com.wanted.challenge.domain.product.ProductStatus;
 import com.wanted.challenge.domain.product.repository.response.ProductResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -122,19 +123,19 @@ public class ProductApiControllerDocsTest extends RestDocsSupport {
             .productId(1L)
             .productName("MacBook Air 15 M2 256GB 스페이스그레이")
             .productPrice(1_200_000)
-            .productStatus("판매중")
+            .productStatus(ProductStatus.SELLING)
             .build();
         ProductResponse response2 = ProductResponse.builder()
             .productId(2L)
             .productName("MacBook Air 15 M2 256GB 미트나이트")
             .productPrice(1_200_000)
-            .productStatus("예약중")
+            .productStatus(ProductStatus.RESERVATION)
             .build();
         ProductResponse response3 = ProductResponse.builder()
             .productId(3L)
             .productName("MacBook Air 15 M2 256GB 실버")
             .productPrice(1_200_000)
-            .productStatus("완료")
+            .productStatus(ProductStatus.COMPLETION)
             .build();
         List<ProductResponse> content = List.of(response1, response2, response3);
         PageRequest page = PageRequest.of(0, 10);
@@ -198,7 +199,7 @@ public class ProductApiControllerDocsTest extends RestDocsSupport {
             .productId(1L)
             .productName("MacBook Air 15 M2 256GB 스페이스그레이")
             .productPrice(1_200_000)
-            .productStatus("판매중")
+            .productStatus(ProductStatus.SELLING)
             .build();
 
         given(productQueryService.searchProduct(anyLong()))
@@ -243,7 +244,7 @@ public class ProductApiControllerDocsTest extends RestDocsSupport {
             .productId(1L)
             .productName("MacBook Air 15 M2 256GB 스페이스그레이")
             .productPrice(1_200_000)
-            .productStatus("예약중")
+            .productStatus(ProductStatus.RESERVATION)
             .build();
 
         given(SecurityUtils.getCurrentMemberKey())
@@ -297,7 +298,7 @@ public class ProductApiControllerDocsTest extends RestDocsSupport {
             .productId(1L)
             .productName("MacBook Air 15 M2 256GB 스페이스그레이")
             .productPrice(1_200_000)
-            .productStatus("완료")
+            .productStatus(ProductStatus.COMPLETION)
             .build();
 
         given(SecurityUtils.getCurrentMemberKey())

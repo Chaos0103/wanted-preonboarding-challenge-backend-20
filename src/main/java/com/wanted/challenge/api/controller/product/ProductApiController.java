@@ -7,7 +7,7 @@ import com.wanted.challenge.api.controller.product.request.ProductSearchParam;
 import com.wanted.challenge.api.service.product.ProductQueryService;
 import com.wanted.challenge.api.service.product.ProductService;
 import com.wanted.challenge.api.service.product.response.ProductCreateResponse;
-import com.wanted.challenge.common.security.SecurityUtils;
+import com.wanted.challenge.common.utils.SecurityUtils;
 import com.wanted.challenge.domain.product.repository.response.ProductResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

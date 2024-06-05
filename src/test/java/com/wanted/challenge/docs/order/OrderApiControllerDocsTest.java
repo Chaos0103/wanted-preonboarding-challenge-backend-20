@@ -4,6 +4,7 @@ import com.wanted.challenge.api.PageResponse;
 import com.wanted.challenge.api.controller.order.OrderApiController;
 import com.wanted.challenge.api.service.order.OrderQueryService;
 import com.wanted.challenge.docs.RestDocsSupport;
+import com.wanted.challenge.domain.product.ProductStatus;
 import com.wanted.challenge.domain.product.repository.response.ProductResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,13 +46,13 @@ public class OrderApiControllerDocsTest extends RestDocsSupport {
             .productId(1L)
             .productName("MacBook Air 15 M2 256GB 스페이스그레이")
             .productPrice(1_200_000)
-            .productStatus("판매중")
+            .productStatus(ProductStatus.SELLING)
             .build();
         ProductResponse response2 = ProductResponse.builder()
             .productId(2L)
             .productName("MacBook Air 15 M2 256GB 미트나이트")
             .productPrice(1_200_000)
-            .productStatus("예약중")
+            .productStatus(ProductStatus.RESERVATION)
             .build();
 
         List<ProductResponse> content = List.of(response1, response2);
