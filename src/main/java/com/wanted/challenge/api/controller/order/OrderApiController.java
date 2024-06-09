@@ -2,10 +2,14 @@ package com.wanted.challenge.api.controller.order;
 
 import com.wanted.challenge.api.ApiResponse;
 import com.wanted.challenge.api.PageResponse;
+import com.wanted.challenge.api.controller.order.request.OrderSearchParam;
 import com.wanted.challenge.api.service.order.OrderQueryService;
-import com.wanted.challenge.domain.product.repository.response.ProductResponse;
+import com.wanted.challenge.common.utils.SecurityUtils;
+import com.wanted.challenge.domain.order.repository.response.OrderResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,8 +21,10 @@ public class OrderApiController {
     private final OrderQueryService orderQueryService;
 
     @GetMapping
-    public ApiResponse<PageResponse<ProductResponse>> searchOrders() {
-        PageResponse<ProductResponse> response = orderQueryService.searchOrders("memberKey");
+    public ApiResponse<PageResponse<OrderResponse>> searchOrders(@Valid @ModelAttribute OrderSearchParam param) {
+        String memberKey = SecurityUtils.getCurrentMemberKey();
+
+        PageResponse<OrderResponse> response = orderQueryService.searchOrders(memberKey, param.getPage());
 
         return ApiResponse.ok(response);
     }
